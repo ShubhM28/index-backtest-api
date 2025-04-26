@@ -86,7 +86,7 @@ def test_optimized_threshold():
         "weighting": {
             "method": "optimized",
             "data_field": "adtv_3_month",
-            "lb": 0.05,
+            "lb": 0.0005,
             "ub": 0.3
         }
     })

@@ -2,20 +2,28 @@ import time
 import pandas as pd
 from app.utils import get_revision_dates, apply_top_n_filter, apply_value_threshold_filter
 from app.data_loader import load_data_field
+from scipy.optimize import linprog
 
 def compute_optimized_weights(values: pd.Series, lb: float, ub: float) -> dict:
     if values.empty:
         return {}
-    
-    normed_vals = values / values.sum()
-    clipped = normed_vals.clip(lower=lb, upper=ub)
-    total = clipped.sum()
-    if total == 0:
+
+    n = len(values)
+
+    c = -values.values  
+
+    A_eq = [[1.0] * n]
+    b_eq = [1.0]
+
+    bounds = [(lb, ub)] * n
+    result = linprog(c, A_eq=A_eq, b_eq=b_eq, bounds=bounds, method='highs')
+
+    if result.success:
+        weights = {sec: round(w, 6) for sec, w in zip(values.index, result.x)}
+        return weights
+    else:
         return {}
-
-    final_weights = clipped / total
-    return final_weights.round(6).to_dict()
-
+    
 def run_backtest(request: dict) -> dict:
     import logging
 
