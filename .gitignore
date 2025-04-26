@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.pyd
+*.pyo
+.Python
+
+# Virtual environments
+venv/
+.venv/
+
+# FastAPI / Uvicorn artifacts
+*.log
+
+# Environment variables
+.env
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+
+# Data files
+data/
+*.parquet
+
+# Git
+.git/
+
+# Pytest cache
+.pytest_cache/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
