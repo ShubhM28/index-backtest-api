@@ -1,3 +1,10 @@
+"""
+Core Backtesting Engine
+- Handles filtering, weighting, optimization
+- Designed to maximize Dᵀw under bounds using linear programming
+- Optimized for memory efficiency and modularity
+"""
+
 import time
 import pandas as pd
 from app.utils import get_revision_dates, apply_top_n_filter, apply_value_threshold_filter

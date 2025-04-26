@@ -96,7 +96,7 @@ This document outlines the key technical and architectural decisions made during
   - Could not guarantee mathematical optimality.
   - Using a mature, tested solver (`scipy.optimize.linprog`) ensures correctness, speed, and maintainability.
 
-## 🔮 Future-Proofing
+## Future-Proofing
 
 - **Scalable**:  
   Codebase can handle larger datasets simply by switching data loaders or parallelizing date-wise operations.
@@ -104,6 +104,27 @@ This document outlines the key technical and architectural decisions made during
   Easy to add new calendar rules, new weighting strategies, or plug in new optimization solvers without breaking existing APIs.
 - **Production-Ready Foundations**:  
   Designed with clean error handling, input validation, and modular architecture to ease transition to real-world deployment environments.
+
+---
+
+## Additional Enhancements (Beyond Project Scope)
+
+To further enhance the robustness, observability, and production-readiness of the API, the following features were independently added:
+
+### 1. `/health` Endpoint
+
+- **Purpose**: Simple health check API endpoint to monitor service uptime and basic availability.
+- **Reason**: Common industry best practice for microservices; allows easy integration with monitoring systems or load balancers.
+
+### 2. Request Logging Middleware
+
+- **Purpose**: Middleware that logs every incoming HTTP request's method and path.
+- **Reason**: Improves observability and debugging capability; crucial for tracing API activity in production environments.
+
+### 3. API Versioning
+
+- **Purpose**: Added explicit versioning (`1.0.0`) to the FastAPI application metadata.
+- **Reason**: Prepares the API for future backward-compatible upgrades and makes it easier to manage evolving API changes professionally.
 
 ---
 

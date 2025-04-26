@@ -7,3 +7,7 @@ router = APIRouter()
 @router.post("/run-backtest", response_model=BacktestResponse)
 def run_backtest_endpoint(req: BacktestRequest):
     return run_backtest(req.dict())
+
+@router.get("/health")
+def health_check():
+    return {"status": "ok"}
