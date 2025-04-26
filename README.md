@@ -24,32 +24,6 @@ A mini backtesting engine for running portfolio simulations using customizable r
 - Pydantic
 - Pytest
 
-## How to Run
-
-1. Clone the repo
-2. Create and activate a virtual environment
-
-```bash
-# Step 1: Clone the repository
-git clone <your-repo-url>
-cd bita-backtest-api
-
-# Step 2: Create and activate a virtual environment
-python3.11 -m venv venv
-# On Mac/Linux
-source venv/bin/activate
-# On Windows
-venv\Scripts\activate
-
-# Step 3: Install dependencies
-pip install -r requirements.txt
-
-# Step 4: Generate dummy data
-python scripts/generate_data.py
-
-# Step 5: Run the FastAPI server
-uvicorn app.main:app --reload
-
 ## Test Coverage
 The project includes extensive tests that verify the main functionalities of the backtest engine:
 
@@ -76,3 +50,29 @@ Expected: Returns HTTP 422 Unprocessable Entity error.
 Test 6: No Securities After Filtering (Edge Case)
 Tests the edge case where no securities pass the filter criteria.
 Expected: Returns an empty weights dictionary gracefully without crashing.
+
+## How to Run
+
+```bash
+# Step 1: Clone the repository
+git clone repo url
+cd bita-backtest-api
+
+# Step 2: Create and activate a virtual environment
+python3.11 -m venv venv
+# On Mac/Linux
+source venv/bin/activate
+# On Windows
+venv\Scripts\activate
+
+# Step 3: Install dependencies
+pip install -r requirements.txt
+
+# Step 4: Generate dummy data
+python scripts/generate_data.py
+
+# Step 5: Run the FastAPI server
+uvicorn app.main:app --reload
+
+
+
