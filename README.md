@@ -37,3 +37,4 @@ pip install -r requirements.txt
 python scripts/generate_data.py
 uvicorn app.main:app --reload
 Go To --> http://localhost:8000/docs
+
