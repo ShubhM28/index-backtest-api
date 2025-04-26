@@ -49,13 +49,14 @@ def run_backtest(request: dict) -> dict:
 
     for date in revision_dates:
         try:
+            date_obj = pd.to_datetime(date).date()
             date_index = df.index.date
 
-            if date not in date_index:
+            if date_obj not in date_index:
                 logging.warning("Date %s not found in data index, skipping.", date)
                 continue
 
-            row = df.loc[df.index.date == date].squeeze()
+            row = df.loc[df.index.date == date_obj].squeeze()
 
             ### Filtering ###
             if request['filter']['filter_type'] == 'top_n':
