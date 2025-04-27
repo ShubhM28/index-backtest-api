@@ -1,16 +1,18 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.venv/
+*.py[cod]
+*.so
+
+# Virtual Environments
 venv/
-.env
-.git
-.gitignore
-Dockerfile
-README.md
-decisions.md
-tests/
-scripts/
-*.parquet
-data/
+.venv/
+
+# Logs
+*.log
+
+# IDE configurations
+.vscode/
+.idea/
+
+# Pytest cache
+.pytest_cache/

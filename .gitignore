@@ -24,7 +24,7 @@ venv/
 
 
 # Data files
-data/
+generated_data/
 *.parquet
 
 # Git
