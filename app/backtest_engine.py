@@ -11,25 +11,29 @@ from app.utils import get_revision_dates, apply_top_n_filter, apply_value_thresh
 from app.data_loader import load_data_field
 from scipy.optimize import linprog
 
+### Optmized weights manually
 def compute_optimized_weights(values: pd.Series, lb: float, ub: float) -> dict:
     if values.empty:
         return {}
 
     n = len(values)
+    sorted_vals = values.sort_values(ascending=False)
+    
+    weights = {sec: lb for sec in sorted_vals.index}
+    total_assigned = lb * n
 
-    c = -values.values  
+    leftover_weight = 1.0 - total_assigned
 
-    A_eq = [[1.0] * n]
-    b_eq = [1.0]
+    for sec in sorted_vals.index:
+        max_additional = ub - lb  #
+        add_weight = min(max_additional, leftover_weight)
+        weights[sec] += round(add_weight, 6)
+        leftover_weight -= add_weight
 
-    bounds = [(lb, ub)] * n
-    result = linprog(c, A_eq=A_eq, b_eq=b_eq, bounds=bounds, method='highs')
+        if leftover_weight <= 0:
+            break
 
-    if result.success:
-        weights = {sec: round(w, 6) for sec, w in zip(values.index, result.x)}
-        return weights
-    else:
-        return {}
+    return weights
     
 def run_backtest(request: dict) -> dict:
     import logging
