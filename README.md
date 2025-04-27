@@ -51,6 +51,10 @@ Test 6: No Securities After Filtering (Edge Case)
 Tests the edge case where no securities pass the filter criteria.
 Expected: Returns an empty weights dictionary gracefully without crashing.
 
+## Example Test Case Outputs
+
+You can view actual API JSON responses generated for each test case in the [examples/](examples/) folder.
+
 ## How to Run
 
 ```bash

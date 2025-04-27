@@ -1,0 +1,17 @@
+{
+  "detail": [
+    {
+      "type": "literal_error",
+      "loc": [
+        "body",
+        "calendar",
+        "rule_type"
+      ],
+      "msg": "Input should be 'custom' or 'quarterly'",
+      "input": "invalid_rule",
+      "ctx": {
+        "expected": "'custom' or 'quarterly'"
+      }
+    }
+  ]
+}

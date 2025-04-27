@@ -1,5 +1,14 @@
+"""
+Test Cases for BITA Mini Backtest API
+- Covers both Equal and Optimized weighting strategies
+- Covers Top-N and Value Threshold filtering methods
+- Tests edge cases and invalid inputs
+"""
+
 import sys
 import os
+
+# Allow imports from parent directory
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from fastapi.testclient import TestClient
@@ -7,8 +16,13 @@ from app.main import app
 
 client = TestClient(app)
 
+# ---------------------- TEST CASES ----------------------
+
 # Test 1: Basic Equal Weighting + Top N + Quarterly
 def test_equal_topn_quarterly():
+    """
+    Test equal weighting with Top-N filter and quarterly rebalancing.
+    """
     response = client.post("/run-backtest", json={
         "dataset_path": "generated_data",
         "calendar": {
@@ -29,6 +43,9 @@ def test_equal_topn_quarterly():
 
 # Test 2: Equal Weighting + Value Threshold + Quarterly
 def test_equal_value_filter():
+    """
+    Test equal weighting with value threshold filter and quarterly calendar.
+    """
     response = client.post("/run-backtest", json={
         "dataset_path": "generated_data",
         "calendar": {
@@ -49,6 +66,9 @@ def test_equal_value_filter():
 
 # Test 3: Optimized Weighting + Top N
 def test_optimized_topn():
+    """
+    Test optimized weighting with Top-N filter and custom date.
+    """
     response = client.post("/run-backtest", json={
         "dataset_path": "generated_data",
         "calendar": {
@@ -72,6 +92,9 @@ def test_optimized_topn():
 
 # Test 4: Optimized Weighting + Value Threshold
 def test_optimized_threshold():
+    """
+    Test optimized weighting with value threshold filter.
+    """
     response = client.post("/run-backtest", json={
         "dataset_path": "generated_data",
         "calendar": {
@@ -95,6 +118,9 @@ def test_optimized_threshold():
 
 # Test 5: Invalid Calendar Rule
 def test_invalid_calendar():
+    """
+    Test invalid calendar rule input validation.
+    """
     response = client.post("/run-backtest", json={
         "dataset_path": "generated_data",
         "calendar": {
@@ -113,6 +139,9 @@ def test_invalid_calendar():
 
 # Test 6: No securities after filter (edge case)
 def test_empty_filter_result():
+    """
+    Test when no securities pass the value threshold filter (edge case).
+    """
     response = client.post("/run-backtest", json={
         "dataset_path": "generated_data",
         "calendar": {
@@ -122,7 +151,7 @@ def test_empty_filter_result():
         "filter": {
             "filter_type": "value_threshold",
             "data_field": "prices",
-            "P": 1000  
+            "P": 1000  # Unrealistically high threshold to force empty result
         },
         "weighting": {
             "method": "equal"
@@ -130,5 +159,4 @@ def test_empty_filter_result():
     })
     result = response.json()
     assert response.status_code == 200
-    assert result["weights"] == {} 
-
+    assert result["weights"] == {}

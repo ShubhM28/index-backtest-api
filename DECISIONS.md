@@ -51,11 +51,24 @@ This document outlines the key technical and architectural decisions made during
 - **Memory Advantage**:
   - Parquet minimizes RAM usage by allowing selective reading and compression.
 
-### Optimization via `scipy.optimize.linprog`
+---
 
+## Optimization Strategy
+
+- **Updated Approach**:
+  - Instead of using external solvers like `scipy.optimize.linprog`, we implemented a **manual heuristic optimization** approach to determine portfolio weights.
+  - **Method**:
+    - Assign minimum (lower bound) weight to all selected securities.
+    - Distribute remaining weight preferentially to higher-value securities, while respecting the upper bounds.
+    - Ensure final weights sum to exactly 1.
 - **Why**:
-  - Required to solve the constrained optimization (maximize Dᵀw subject to bounds and sum constraints) accurately.
-  - `linprog` with `highs` method provides fast and robust solutions suitable for production-grade optimization.
+  - Matches the project guidelines to avoid external optimization libraries.
+  - Keeps the system lightweight, easy to debug, and avoids solver-related dependencies.
+  - The heuristic still respects all constraints (bounds, full investment).
+
+- **Trade-offs**:
+  - True mathematical optimality (global maximum) is not always guaranteed.
+  - However, the heuristic provides a reasonable approximation while maintaining simplicity and interpretability.
 
 ---
 
@@ -65,7 +78,7 @@ This document outlines the key technical and architectural decisions made during
   - Only **load one field (one Parquet file)** per request, not all fields at once — avoids unnecessary memory bloat.
   - Work at **row level (single date)** rather than loading the full historical time series into memory at once.
 - **Efficiency**:
-  - Filtering and weighting operations are fully vectorized using Pandas — O(N) complexity.
+  - Filtering and weighting operations are fully vectorized using Pandas — O(N) complexity where possible.
   - No use of heavy in-memory caching unless explicitly needed, keeping the application lightweight for API-first usage.
 
 ---
@@ -88,22 +101,24 @@ This document outlines the key technical and architectural decisions made during
   - Limits flexibility for custom dates.
   - Would make the service less dynamic for user-specific inputs.
 
-### 3. Custom Optimization Algorithms
+### 3. Using External Optimization Solvers
 
 - **Discarded**:
-  - Considered writing a manual greedy algorithm for optimized weighting.
+  - Initially used `scipy.optimize.linprog` to solve the portfolio optimization accurately.
 - **Why Not**:
-  - Could not guarantee mathematical optimality.
-  - Using a mature, tested solver (`scipy.optimize.linprog`) ensures correctness, speed, and maintainability.
+  - Based on project guidelines, reliance on external solvers was not allowed.
+  - Manual heuristic optimization was preferred to keep the solution lightweight, understandable, and free of external mathematical solvers.
+
+---
 
 ## Future-Proofing
 
 - **Scalable**:  
   Codebase can handle larger datasets simply by switching data loaders or parallelizing date-wise operations.
 - **Extensible**:  
-  Easy to add new calendar rules, new weighting strategies, or plug in new optimization solvers without breaking existing APIs.
+  Easy to add new calendar rules, new filtering methods, or new weighting strategies without breaking existing APIs.
 - **Production-Ready Foundations**:  
-  Designed with clean error handling, input validation, and modular architecture to ease transition to real-world deployment environments.
+  Designed with clean error handling, input validation, modular architecture, and lightweight dependencies to ease transition to real-world deployment environments.
 
 ---
 
@@ -130,6 +145,5 @@ To further enhance the robustness, observability, and production-readiness of th
 
 # Final Thought
 
-The overall goal was to build a fast, scalable, mathematically correct backtesting engine while maintaining codebase simplicity and extensibility.  
-Every decision was made keeping in mind practical considerations of **memory efficiency**, **extensibility**, **developer ergonomics**, and **real-world performance**.
-
+The overall goal was to build a fast, scalable, memory-efficient backtesting engine while maintaining codebase simplicity and extensibility.  
+Every decision was made keeping in mind practical considerations of **memory efficiency**, **simplicity**, **developer ergonomics**, and **real-world performance**.
