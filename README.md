@@ -1,4 +1,4 @@
-# BITA Mini Backtest API
+# Index Mini Backtest API
 
 A mini backtesting engine for running portfolio simulations using customizable rules (calendar, filters, weights) built with FastAPI, Pandas, and Pydantic.
 
